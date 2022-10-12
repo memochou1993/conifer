@@ -1,12 +1,16 @@
 #[macro_use]
 extern crate rocket;
+use crate::handler::{get_record, get_records};
 
-#[get("/world")]
-fn world() -> &'static str {
-    "Hello, world!"
-}
+mod handler;
+mod model;
+mod repository;
+mod response;
+mod schema;
 
 #[launch]
 pub fn rocket() -> _ {
-    rocket::build().mount("/hello", routes![world])
+    rocket::build()
+        .mount("/api", routes![get_records])
+        .mount("/api", routes![get_record])
 }
