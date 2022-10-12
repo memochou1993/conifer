@@ -1,6 +1,7 @@
 use crate::{
     repository,
-    response::{RespGetRecord, RespGetRecords},
+    request::ReqStoreRecord,
+    response::{RespGetRecord, RespGetRecords, RespStoreRecord},
 };
 use rocket::{http::Status, serde::json::Json};
 
@@ -13,7 +14,26 @@ pub fn get_records() -> Result<Json<RespGetRecords>, Status> {
             Some(r) => Ok(Json(RespGetRecords { data: r })),
             None => Err(Status::NotFound),
         },
-        Err(_) => Err(Status::InternalServerError),
+        Err(e) => {
+            print!("{}", e);
+            Err(Status::InternalServerError)
+        }
+    }
+}
+
+#[post("/records", format = "json", data = "<req>")]
+pub fn store_record(req: Json<ReqStoreRecord>) -> Result<Json<RespStoreRecord>, Status> {
+    let conn = &mut repository::connect();
+    let record = repository::store_record(conn, &req.url);
+    match record {
+        Ok(r) => match r {
+            Some(r) => Ok(Json(RespStoreRecord { data: r })),
+            None => Err(Status::NotFound),
+        },
+        Err(e) => {
+            print!("{}", e);
+            Err(Status::InternalServerError)
+        }
     }
 }
 
@@ -26,6 +46,9 @@ pub fn get_record(id: &str) -> Result<Json<RespGetRecord>, Status> {
             Some(r) => Ok(Json(RespGetRecord { data: r })),
             None => Err(Status::NotFound),
         },
-        Err(_) => Err(Status::InternalServerError),
+        Err(e) => {
+            print!("{}", e);
+            Err(Status::InternalServerError)
+        }
     }
 }

@@ -24,3 +24,16 @@ pub fn get_record(conn: &mut PgConnection, _id: &str) -> Result<Option<Record>, 
         .get_result::<Record>(conn)
         .optional()
 }
+
+pub fn store_record(conn: &mut PgConnection, _url: &str) -> Result<Option<Record>, Error> {
+    use crate::schema::records;
+    let record = Record {
+        id: String::from("foo"), // FIXME: use nanoid
+        url: String::from(_url),
+    };
+
+    diesel::insert_into(records::table)
+        .values(&record)
+        .get_result::<Record>(conn)
+        .optional()
+}

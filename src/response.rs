@@ -8,6 +8,11 @@ pub struct RespGetRecords {
 }
 
 #[derive(Queryable, Serialize)]
+pub struct RespStoreRecord {
+    pub data: Record,
+}
+
+#[derive(Queryable, Serialize)]
 pub struct RespGetRecord {
     pub data: Record,
 }
