@@ -1,4 +1,4 @@
-use crate::schema::records;
+use crate::database::schema::records;
 use diesel::prelude::*;
 use rocket::serde::{Deserialize, Serialize};
 

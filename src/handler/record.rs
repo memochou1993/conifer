@@ -1,14 +1,14 @@
 use crate::{
-    repository,
-    request::ReqStoreRecord,
-    response::{RespGetRecord, RespGetRecords, RespStoreRecord},
+    database::{connect, record as model},
+    request::record::ReqRecordStore,
+    response::record::{RespRecordIndex, RespRecordShow, RespRecordStore},
 };
 use rocket::{http::Status, response::Redirect, serde::json::Json};
 
 #[get("/<id>")]
 pub fn redirect(id: String) -> Result<Redirect, Status> {
-    let conn = &mut repository::connect();
-    let record = repository::get_record(conn, &id);
+    let conn = &mut connect();
+    let record = model::get_by_id(conn, &id);
     match record {
         Ok(r) => match r {
             Some(r) => Ok(Redirect::to(r.url)),
@@ -22,12 +22,12 @@ pub fn redirect(id: String) -> Result<Redirect, Status> {
 }
 
 #[get("/records")]
-pub fn get_records() -> Result<Json<RespGetRecords>, Status> {
-    let conn = &mut repository::connect();
-    let records = repository::get_records(conn);
+pub fn index() -> Result<Json<RespRecordIndex>, Status> {
+    let conn = &mut connect();
+    let records = model::get_all(conn);
     match records {
         Ok(r) => match r {
-            Some(r) => Ok(Json(RespGetRecords { data: r })),
+            Some(r) => Ok(Json(RespRecordIndex { data: r })),
             None => Err(Status::NotFound),
         },
         Err(e) => {
@@ -38,12 +38,12 @@ pub fn get_records() -> Result<Json<RespGetRecords>, Status> {
 }
 
 #[post("/records", format = "json", data = "<req>")]
-pub fn store_record(req: Json<ReqStoreRecord>) -> Result<Json<RespStoreRecord>, Status> {
-    let conn = &mut repository::connect();
-    let record = repository::store_record(conn, &req.url);
+pub fn store(req: Json<ReqRecordStore>) -> Result<Json<RespRecordStore>, Status> {
+    let conn = &mut connect();
+    let record = model::save(conn, &req.url);
     match record {
         Ok(r) => match r {
-            Some(r) => Ok(Json(RespStoreRecord { data: r })),
+            Some(r) => Ok(Json(RespRecordStore { data: r })),
             None => Err(Status::NotFound),
         },
         Err(e) => {
@@ -54,12 +54,12 @@ pub fn store_record(req: Json<ReqStoreRecord>) -> Result<Json<RespStoreRecord>, 
 }
 
 #[get("/records/<id>")]
-pub fn get_record(id: &str) -> Result<Json<RespGetRecord>, Status> {
-    let conn = &mut repository::connect();
-    let record = repository::get_record(conn, id);
+pub fn show(id: &str) -> Result<Json<RespRecordShow>, Status> {
+    let conn = &mut connect();
+    let record = model::get_by_id(conn, id);
     match record {
         Ok(r) => match r {
-            Some(r) => Ok(Json(RespGetRecord { data: r })),
+            Some(r) => Ok(Json(RespRecordShow { data: r })),
             None => Err(Status::NotFound),
         },
         Err(e) => {

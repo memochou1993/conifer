@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-pub struct ReqStoreRecord {
+pub struct ReqRecordStore {
     pub url: String,
 }
