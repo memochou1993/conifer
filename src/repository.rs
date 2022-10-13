@@ -4,6 +4,7 @@ use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::result::Error;
 use dotenvy::dotenv;
+use nanoid::nanoid;
 use std::env;
 
 pub fn connect() -> PgConnection {
@@ -28,7 +29,7 @@ pub fn get_record(conn: &mut PgConnection, _id: &str) -> Result<Option<Record>, 
 pub fn store_record(conn: &mut PgConnection, _url: &str) -> Result<Option<Record>, Error> {
     use crate::schema::records;
     let record = Record {
-        id: String::from("foo"), // FIXME: use nanoid
+        id: nanoid!(10),
         url: String::from(_url),
     };
 

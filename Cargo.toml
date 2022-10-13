@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 diesel = { version = "2.0", features = ["postgres"] }
 dotenvy = "0.15.5"
+nanoid = "0.4.0"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
