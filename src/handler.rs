@@ -3,7 +3,23 @@ use crate::{
     request::ReqStoreRecord,
     response::{RespGetRecord, RespGetRecords, RespStoreRecord},
 };
-use rocket::{http::Status, serde::json::Json};
+use rocket::{http::Status, response::Redirect, serde::json::Json};
+
+#[get("/<id>")]
+pub fn redirect(id: String) -> Result<Redirect, Status> {
+    let conn = &mut repository::connect();
+    let record = repository::get_record(conn, &id);
+    match record {
+        Ok(r) => match r {
+            Some(r) => Ok(Redirect::to(r.url)),
+            None => Err(Status::NotFound),
+        },
+        Err(e) => {
+            print!("{}", e);
+            Err(Status::InternalServerError)
+        }
+    }
+}
 
 #[get("/records")]
 pub fn get_records() -> Result<Json<RespGetRecords>, Status> {
