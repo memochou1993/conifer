@@ -4,7 +4,6 @@ use dotenvy::dotenv;
 use std::env;
 
 pub mod record;
-pub mod schema;
 
 pub fn connect() -> PgConnection {
     dotenv().ok();

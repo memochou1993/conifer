@@ -7,6 +7,7 @@ mod handler;
 mod model;
 mod request;
 mod response;
+mod schema;
 
 #[launch]
 pub fn rocket() -> _ {

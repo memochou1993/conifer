@@ -1,8 +1,9 @@
-use crate::database::schema::records::dsl::{id, records as table};
 use crate::model::record::Record;
-use diesel::prelude::*;
+use crate::schema::records::dsl::{id, records as table};
 use diesel::result::Error;
+use diesel::{prelude::*, select};
 use nanoid::nanoid;
+use std::time::SystemTime;
 
 pub fn get_all(conn: &mut PgConnection) -> Result<Option<Vec<Record>>, Error> {
     table.get_results::<Record>(conn).optional()
@@ -17,9 +18,14 @@ pub fn get_by_id(conn: &mut PgConnection, _id: &str) -> Result<Option<Record>, E
 }
 
 pub fn save(conn: &mut PgConnection, _url: &str) -> Result<Option<Record>, Error> {
+    let now = select(diesel::dsl::now).get_result::<SystemTime>(conn)?;
     let record = Record {
         id: nanoid!(10),
         url: String::from(_url),
+        password: String::from(""),
+        expired_at: now,
+        updated_at: now,
+        created_at: now,
     };
 
     diesel::insert_into(table)
