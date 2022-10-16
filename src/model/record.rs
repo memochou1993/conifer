@@ -7,7 +7,6 @@ use std::time::SystemTime;
 pub struct Record {
     pub id: String,
     pub url: String,
-    pub password: String,
     pub expired_at: SystemTime,
     pub updated_at: SystemTime,
     pub created_at: SystemTime,

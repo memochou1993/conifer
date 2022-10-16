@@ -16,4 +16,5 @@ pub fn rocket() -> _ {
         .mount("/api", routes![record::index])
         .mount("/api", routes![record::store])
         .mount("/api", routes![record::show])
+        .mount("/api", routes![record::destroy])
 }

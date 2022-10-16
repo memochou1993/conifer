@@ -60,3 +60,16 @@ pub fn show(id: &str) -> Result<Json<RespRecordShow>, status::Custom<String>> {
         Err(e) => Err(status::Custom(Status::InternalServerError, e.to_string())),
     }
 }
+
+#[delete("/records/<id>")]
+pub fn destroy(id: &str) -> Result<status::Custom<String>, status::Custom<String>> {
+    let conn = &mut connect();
+    let count = model::delete(conn, id);
+    match count {
+        Ok(c) => match c {
+            c if c > 0 => Ok(status::Custom(Status::NoContent, "".to_string())),
+            _ => Err(status::Custom(Status::NotFound, "".to_string())),
+        },
+        Err(e) => Err(status::Custom(Status::InternalServerError, e.to_string())),
+    }
+}

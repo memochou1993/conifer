@@ -22,7 +22,6 @@ pub fn save(conn: &mut PgConnection, _url: &str) -> Result<Option<Record>, Error
     let record = Record {
         id: nanoid!(10),
         url: String::from(_url),
-        password: String::from(""),
         expired_at: now,
         updated_at: now,
         created_at: now,
@@ -32,4 +31,8 @@ pub fn save(conn: &mut PgConnection, _url: &str) -> Result<Option<Record>, Error
         .values(&record)
         .get_result::<Record>(conn)
         .optional()
+}
+
+pub fn delete(conn: &mut PgConnection, _id: &str) -> Result<usize, Error> {
+    diesel::delete(table.filter(id.eq(_id))).execute(conn)
 }
