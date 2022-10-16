@@ -4,6 +4,7 @@ diesel::table! {
     records (id) {
         id -> Varchar,
         url -> Text,
+        token -> Nullable<Varchar>,
         expired_at -> Timestamp,
         updated_at -> Timestamp,
         created_at -> Timestamp,
