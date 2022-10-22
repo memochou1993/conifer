@@ -1,7 +1,7 @@
 use crate::model::record::Record;
 use crate::schema::records::dsl::{self, records as table};
+use diesel::prelude::*;
 use diesel::result::Error;
-use diesel::{prelude::*, select};
 use nanoid::nanoid;
 use std::time::SystemTime;
 
