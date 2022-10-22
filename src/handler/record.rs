@@ -1,7 +1,7 @@
 use crate::{
     database::{connect, record as model},
     request::record::ReqRecordStore,
-    response::record::{RespRecordIndex, RespRecordShow},
+    response::record::{RespRecord, RespRecordIndex, RespRecordShow},
 };
 use rocket::{
     http::Status,
@@ -24,7 +24,19 @@ pub fn index() -> Result<Json<RespRecordIndex>, status::Custom<String>> {
     let conn = &mut connect();
     let records = model::get_all(conn);
     match records {
-        Some(r) => Ok(Json(RespRecordIndex { data: r })),
+        Some(r) => {
+            let data = r
+                .iter()
+                .map(|r| RespRecord {
+                    id: r.id.clone(),
+                    url: r.url.clone(),
+                    expired_at: r.expired_at.into(),
+                    created_at: r.expired_at.into(),
+                    updated_at: r.expired_at.into(),
+                })
+                .collect();
+            Ok(Json(RespRecordIndex { data }))
+        }
         None => Err(status::Custom(Status::NotFound, "".to_string())),
     }
 }
@@ -47,7 +59,16 @@ pub fn show(id: &str) -> Result<Json<RespRecordShow>, status::Custom<String>> {
     let conn = &mut connect();
     let record = model::get_by_id(conn, id);
     match record {
-        Some(r) => Ok(Json(RespRecordShow { data: r })),
+        Some(r) => {
+            let data = RespRecord {
+                id: r.id.clone(),
+                url: r.url.clone(),
+                expired_at: r.expired_at.into(),
+                created_at: r.expired_at.into(),
+                updated_at: r.expired_at.into(),
+            };
+            Ok(Json(RespRecordShow { data }))
+        }
         None => Err(status::Custom(Status::NotFound, "".to_string())),
     }
 }

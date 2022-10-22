@@ -3,6 +3,6 @@ CREATE TABLE records (
   url TEXT NOT NULL,
   token VARCHAR(6),
   expired_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL,
   created_at TIMESTAMP NOT NULL
+  updated_at TIMESTAMP NOT NULL,
 );
