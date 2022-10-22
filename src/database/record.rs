@@ -25,16 +25,13 @@ pub fn get_by_id(conn: &mut PgConnection, id: &str) -> Option<Record> {
 }
 
 pub fn save(conn: &mut PgConnection, url: &str, token: &str) -> Option<Record> {
-    let now = select(diesel::dsl::now)
-        .get_result::<SystemTime>(conn)
-        .unwrap();
     let record = Record {
         id: nanoid!(10),
         url: String::from(url),
         token: Some(String::from(token)),
-        expired_at: now,
-        created_at: now,
-        updated_at: now,
+        expired_at: SystemTime::now(),
+        created_at: SystemTime::now(),
+        updated_at: SystemTime::now(),
     };
     let res = diesel::insert_into(table)
         .values(&record)
