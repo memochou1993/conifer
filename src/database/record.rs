@@ -6,8 +6,7 @@ use nanoid::nanoid;
 use std::time::SystemTime;
 
 pub fn get_all(conn: &mut PgConnection) -> Option<Vec<Record>> {
-    let res = table
-        .get_results::<Record>(conn);
+    let res = table.get_results::<Record>(conn);
     match res {
         Ok(r) => Some(r),
         Err(_) => None,
@@ -25,8 +24,10 @@ pub fn get_by_id(conn: &mut PgConnection, id: &str) -> Option<Record> {
     }
 }
 
-pub fn save(conn: &mut PgConnection, url: &str, token: &str) -> Result<usize, Error> {
-    let now = select(diesel::dsl::now).get_result::<SystemTime>(conn)?;
+pub fn save(conn: &mut PgConnection, url: &str, token: &str) -> Option<Record> {
+    let now = select(diesel::dsl::now)
+        .get_result::<SystemTime>(conn)
+        .unwrap();
     let record = Record {
         id: nanoid!(10),
         url: String::from(url),
@@ -35,7 +36,13 @@ pub fn save(conn: &mut PgConnection, url: &str, token: &str) -> Result<usize, Er
         created_at: now,
         updated_at: now,
     };
-    diesel::insert_into(table).values(&record).execute(conn)
+    let res = diesel::insert_into(table)
+        .values(&record)
+        .get_result::<Record>(conn);
+    match res {
+        Ok(r) => Some(r),
+        Err(_) => None,
+    }
 }
 
 pub fn delete(conn: &mut PgConnection, id: &str, token: &str) -> Result<usize, Error> {
