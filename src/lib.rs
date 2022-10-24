@@ -18,7 +18,6 @@ fn options() {}
 pub fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![record::redirect, options])
-        .mount("/api", routes![record::index])
         .mount("/api", routes![record::store])
         .mount("/api", routes![record::show])
         .mount("/api", routes![record::destroy])

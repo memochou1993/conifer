@@ -11,11 +11,6 @@ pub struct RespRecord {
 }
 
 #[derive(Serialize)]
-pub struct RespRecordIndex {
-    pub data: Vec<RespRecord>,
-}
-
-#[derive(Serialize)]
 pub struct RespRecordStore {
     pub data: RespRecord,
 }
