@@ -30,6 +30,7 @@ pub fn store(
             let data = RespRecord {
                 id: r.id.clone(),
                 url: r.url.clone(),
+                token: r.token.clone().unwrap(),
                 expired_at: r.expired_at.into(),
                 created_at: r.expired_at.into(),
                 updated_at: r.expired_at.into(),
@@ -52,6 +53,7 @@ pub fn show(id: &str) -> Result<status::Custom<Json<RespRecordShow>>, status::Cu
             let data = RespRecord {
                 id: r.id.clone(),
                 url: r.url.clone(),
+                token: String::from(""),
                 expired_at: r.expired_at.into(),
                 created_at: r.expired_at.into(),
                 updated_at: r.expired_at.into(),

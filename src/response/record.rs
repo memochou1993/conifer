@@ -5,6 +5,7 @@ use rocket::serde::Serialize;
 pub struct RespRecord {
     pub id: String,
     pub url: String,
+    pub token: String,
     pub expired_at: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
